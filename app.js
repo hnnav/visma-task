@@ -1,5 +1,5 @@
 // Class (Params: URL)
-class URL {
+class URLParser {
 
   // let url1 = new Url("visma-identity://login?source=severa");
   constructor(uri) {
@@ -15,6 +15,9 @@ class URL {
   }
 }
 
-const url1 = new URL("visma-identity://login?source=severa");
+const url1 = new URLParser("visma-identity://login?source=severa");
 url1.getScheme() // visma-identity
 
+class Client {
+  // Invokes UrlParser
+}
