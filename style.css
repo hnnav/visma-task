@@ -10,6 +10,7 @@ form {
 }
 
 input {
+    width: 70%;
     border: none;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     padding: 10px 20px;
