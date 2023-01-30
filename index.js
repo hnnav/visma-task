@@ -1,7 +1,7 @@
 // Grab elements 
 const form = document.querySelector(".form");
 const input = document.querySelector("input");
-const urlContainer = document.querySelector(".url-container");
+const urlContainer = document.querySelector(".urls-container");
 
 // Form eventlistener
 form.addEventListener("submit", (e) => {
@@ -30,7 +30,6 @@ class URL {
     }
   }
 
-  // Is path login, confirm or sign?
   getPath(){
     const path = this.url.substring(this.url.lastIndexOf('/') + 1, this.url.indexOf('?'));
     if (path === 'login' || 'confirm' || 'sign' ) {
@@ -46,6 +45,9 @@ class Client {
   static displayData(url, scheme, path){
 
     // Create elements
+    const newDiv = document.createElement("div");
+    newDiv.setAttribute('class', 'url-container');
+
     const UrlDisplay = document.createElement("p");
     UrlDisplay.setAttribute('class', 'url-display');
 
@@ -61,9 +63,8 @@ class Client {
     pathDisplay.innerHTML = path
 
     // Add to page
-    urlContainer.append(UrlDisplay)
-    urlContainer.append(schemeDisplay)
-    urlContainer.append(pathDisplay)
+    newDiv.append(UrlDisplay, schemeDisplay, pathDisplay)
+    urlContainer.append(newDiv)
   }
 
   static clearInput(){
