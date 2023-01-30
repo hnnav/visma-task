@@ -15,63 +15,58 @@ form.addEventListener("submit", (e) => {
 });
 
 class URL {
-
   constructor(url) {
     this.url = url;
+    this.scheme = url.slice(0, url.indexOf(':'));
+    this.path = url.substring(url.lastIndexOf('/') + 1, url.indexOf('?'));
+
+    // Setting url parameters as key: value pairs
+    const searchParams = new URLSearchParams(this.url.substring(this.url.indexOf('?')));
+    const params = {};
+    for (const [key, value] of searchParams.entries()) {
+      params[key] = value;
+    }
+    this.params = params;
   }
-
+  
   validateScheme(){
-    const scheme = this.url.slice(0, this.url.indexOf(':')); // visma-identity
-
-    if (scheme === 'visma-identity') {
-      return `Correct scheme: ${scheme}`;
+    if (this.scheme === 'visma-identity') {
+      return `Correct scheme: ${this.scheme}`;
     } else {
-      return `Incorrect scheme: ${scheme}`;
+      return `Incorrect scheme: ${this.scheme}`;
     }
   }
-
+  
   validatePath(){
-    const path = this.url.substring(this.url.lastIndexOf('/') + 1, this.url.indexOf('?'));
-
-    if (path === 'login' || 
-        path === 'confirm' || 
-        path === 'sign') {
-      return `Allowed path: ${path}`
+    if (this.path === 'login' || 
+    this.path === 'confirm' || 
+    this.path === 'sign') {
+      return `Allowed path: ${this.path}`
     } else {
       return 'Incorrect path'
     }
   }
-
-  validateParams(){ // Must return params as key: value pairs
-    const path = this.url.substring(this.url.lastIndexOf('/') + 1, this.url.indexOf('?'));
-
-    const searchParams = new URLSearchParams(this.url.substring(this.url.indexOf('?')));
-
-    const paramsObj = {};
-    for (const [key, value] of searchParams.entries()) {
-      paramsObj[key] = value;
+  
+  validateParams(){
+    // Login path
+    if ((this.path === 'login') && (typeof this.params.source === 'string')) {
+      return `Valid parameters for login path: source= ${this.params.source}`;
     }
-
-    // Login: source(type:string)
-    if ((path === 'login') && (typeof paramsObj.source === 'string')) {
-      return `Valid parameters for login path: source= ${paramsObj.source}`;
+    // Confirm path
+    else if ((this.path === 'confirm') && (typeof this.params.source === 'string') && (/^\d+$/.test(this.params.paymentnumber) === true)) {
+      return `Valid parameters for confirm path: source= ${this.params.source}, payment number= ${this.params.paymentnumber}`;
     }
-    // Confirm: source(type:string), payment number(type:integer)
-    else if ((path === 'confirm') && (typeof paramsObj.source === 'string') && (/^\d+$/.test(paramsObj.paymentnumber) === true)) {
-      return `Valid parameters for confirm path: source= ${paramsObj.source}, payment number= ${paramsObj.paymentnumber}`;
-    }
-    // Sign: source(type: string), documentid(type:string)
-    else if ((path === 'sign') && (typeof paramsObj.documentid === 'string')) {
-      return `Valid parameters for sign path: source= ${paramsObj.source}, document id= ${paramsObj.documentid}`;
+    // Sign path
+    else if ((this.path === 'sign') && (typeof this.params.documentid === 'string')) {
+      return `Valid parameters for sign path: source= ${this.params.source}, document id= ${this.params.documentid}`;
     } else {
-      return 'Incorrect parameters';
+      return 'Incorrect parameters for this path';
     }
-
   }
-}
+};
 
 class Client {
-
+  
   static displayData(url, scheme, path, params){
 
     // Create elements
@@ -80,18 +75,18 @@ class Client {
     const schemeDisplay = document.createElement("p");
     const pathDisplay = document.createElement("p");
     const paramDisplay = document.createElement("p");
-
+    
     // Add values
     UrlDisplay.innerHTML = 'URL: ' + url
     schemeDisplay.innerHTML = scheme
     pathDisplay.innerHTML = path
     paramDisplay.innerHTML = params
-
+    
     // Add to page
     newDiv.append(UrlDisplay, schemeDisplay, pathDisplay, paramDisplay)
     urlContainer.append(newDiv)
   }
-
+  
   static clearInput(){
     input.value = "";
   }
