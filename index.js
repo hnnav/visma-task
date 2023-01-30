@@ -1,4 +1,4 @@
-// Grab elements 
+// Get elements 
 const form = document.querySelector(".form");
 const input = document.querySelector("input");
 const urlContainer = document.querySelector(".urls-container");
@@ -10,7 +10,7 @@ form.addEventListener("submit", (e) => {
   // Get url value
   const newUrl = new URL(input.value);
 
-  Client.displayData(newUrl.url, newUrl.validateScheme(), newUrl.getPath());
+  Client.displayData(newUrl.url, newUrl.validateScheme(), newUrl.validatePath());
   Client.clearInput();
 });
 
@@ -30,13 +30,26 @@ class URL {
     }
   }
 
-  getPath(){
+  validatePath(){
     const path = this.url.substring(this.url.lastIndexOf('/') + 1, this.url.indexOf('?'));
-    if (path === 'login' || 'confirm' || 'sign' ) {
+    console.log(path);
+    if (path === 'login' || 
+        path === 'confirm' || 
+        path === 'sign') {
       return `Allowed path: ${path}`
     } else {
       return 'Incorrect path'
     }
+  }
+
+  validateParams(){ // Must return params as key: value pairs
+
+    // Login: source(type:string)
+
+    // Confirm: source(type:string), payment number(type:integer)
+
+    // Sign: source(type: string), documentid(type:string)
+
   }
 }
 
